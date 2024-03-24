@@ -11,7 +11,7 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface ClientMapper {
 
-    ClientResponse toClientDTO(ClientEntity productEntity);
+    ClientResponse toClientDTO(ClientEntity clientEntity);
 
     @Mapping(target = "id", ignore = true) // Ignorar el mapeo del campo 'id'
     @Mapping(target = "deleted", ignore = true)

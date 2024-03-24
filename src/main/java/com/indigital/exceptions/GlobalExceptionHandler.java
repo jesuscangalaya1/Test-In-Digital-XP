@@ -1,6 +1,8 @@
 package com.indigital.exceptions;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.indigital.dto.response.ErrorResponse;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -26,6 +28,7 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(error, ex.getStatus());
     }
 
+
     // Manejo de excepciones para MethodArgumentNotValidException (validación de argumentos)
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<?> tratarError400(MethodArgumentNotValidException e){
@@ -48,13 +51,24 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<ErrorResponse> handleRuntimeException(RuntimeException ex) {
-        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
-        ErrorResponse error = ErrorResponse.builder()
-                .date(LocalDateTime.now())
-                .code("P-500")
-                .message(ex.getMessage())
-                .build();
-        return new ResponseEntity<>(error, status);
+        Throwable cause = ex.getCause();
+        if (cause instanceof InvalidFormatException) {
+            String errorMessage = "La fecha de nacimiento debe seguir el formato 'yyyy-MM-dd' y ser una fecha válida";
+            ErrorResponse error = ErrorResponse.builder()
+                    .date(LocalDateTime.now())
+                    .code("P-400")
+                    .message(errorMessage)
+                    .build();
+            return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+        } else {
+            HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+            ErrorResponse error = ErrorResponse.builder()
+                    .date(LocalDateTime.now())
+                    .code("P-500")
+                    .message(ex.getMessage())
+                    .build();
+            return new ResponseEntity<>(error, status);
+        }
     }
 
     // Este método maneja excepciones de tipo NullPointerException

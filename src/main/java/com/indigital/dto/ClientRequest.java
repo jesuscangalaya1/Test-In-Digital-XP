@@ -1,5 +1,6 @@
 package com.indigital.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,9 +39,10 @@ public class ClientRequest {
 
     @Schema(
             description = "Fecha de nacimiento del cliente",
-            example = "DD-MM-YYYY"
+            example = "2000-12-12"
     )
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
     private LocalDate birthDate;
 }

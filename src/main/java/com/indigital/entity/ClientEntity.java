@@ -1,5 +1,6 @@
 package com.indigital.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,8 +32,9 @@ public class ClientEntity {
     @Column(name = "edad")
     private Integer age;
 
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @Column(name = "fecha_nacimiento")
-    @DateTimeFormat(pattern = "dd-MM-yyyy")
     private LocalDate birthDate;
 
     private boolean deleted;

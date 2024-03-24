@@ -7,25 +7,17 @@ import com.indigital.dto.response.PageableResponse;
 import com.indigital.dto.response.RestResponse;
 import com.indigital.service.ClientService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.core.io.Resource;
 
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Positive;
-
-import java.io.File;
-import java.util.List;
 
 import static com.indigital.util.AppConstants.*;
 
@@ -36,17 +28,17 @@ import static com.indigital.util.AppConstants.*;
 @Tag(name = "CLIENTE", description = "Operaciones permitidas sobre la entidad Cliente")
 public class ClientController {
 
-    private final ClientService productService;
+    private final ClientService clientService;
 
     @Operation(summary = "Crear un nuevo cliente")
     @ApiResponse(responseCode = "201", description = "Cliente creado exitosamente")
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public RestResponse<ClientResponse> createClient(@RequestBody @Valid ClientRequest productRequest) {
+    public RestResponse<ClientResponse> createClient(@RequestBody @Valid ClientRequest clientRequest) {
 
         return new RestResponse<>("SUCCESS",
                 String.valueOf(HttpStatus.CREATED),
                 "CLIENT SUCCESSFULLY CREATED",
-                productService.createClient(productRequest));
+                clientService.createClient(clientRequest));
     }
 
     @Operation(summary = "Obtener la información de todos los clientes paginados")
@@ -60,7 +52,7 @@ public class ClientController {
         return new RestResponse<>(SUCCESS,
                 String.valueOf(HttpStatus.OK),
                 "CLIENT SUCCESSFULLY READED",
-                productService.paginationClients(numeroDePagina, medidaDePagina, ordenarPor, sortDir));
+                clientService.paginationClients(numeroDePagina, medidaDePagina, ordenarPor, sortDir));
     }
 
 
@@ -70,19 +62,19 @@ public class ClientController {
         return new RestResponse<>("SUCCESS",
                 String.valueOf(HttpStatus.OK),
                 "CLIENT KPI SUCCESSFULLY CALCULATED",
-                productService.calculateClientKpi());
+                clientService.calculateClientKpi());
     }
 
 
     @Operation(summary = "Eliminar un cliente por su ID")
     @DeleteMapping(value = "/{id}")
     public RestResponse<String> deleteClient(@Positive(message = "el ID solo acepta numeros positivos")
-                                              @PathVariable Long id) {
+                                             @PathVariable Long id) {
 
-        productService.deleteClient(id);
+        clientService.deleteClient(id);
         return new RestResponse<>(SUCCESS,
                 String.valueOf(HttpStatus.OK),
-                MESSAGE_ID_CLIENT+ id + " SUCCESSFULLY DELETED",
+                MESSAGE_ID_CLIENT + id + " SUCCESSFULLY DELETED",
                 "null"); // Data null.
     }
 

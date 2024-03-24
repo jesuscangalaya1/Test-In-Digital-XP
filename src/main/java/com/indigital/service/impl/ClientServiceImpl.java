@@ -21,6 +21,9 @@ import org.springframework.data.domain.Sort;
 
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 import static com.indigital.util.AppConstants.*;
@@ -40,34 +43,35 @@ public class ClientServiceImpl implements ClientService {
         Pageable pageable = PageRequest.of(numeroDePagina - 1, medidaDePagina, sort);
 
         // Obtener una página de clientes desde el repositorio
-        Page<ClientEntity> products = clientRepository.findAllByDeletedFalse(pageable);
+        Page<ClientEntity> clients = clientRepository.findAllByDeletedFalse(pageable);
 
         // Mapear la página de entidades a una página de DTOs
-        List<ClientResponse> productResponsePage = clientMapper.toListClientsDTO(products.getContent());
+        List<ClientResponse> clientResponsePage = clientMapper.toListClientsDTO(clients.getContent());
 
-        if (productResponsePage.isEmpty()) {
+        if (clientResponsePage.isEmpty()) {
             throw new BusinessException("P-204", HttpStatus.NO_CONTENT, "Lista Vaciá de Clientes");
         }
 
         return PageableResponse.<ClientResponse>builder()
-                .content(productResponsePage)
-                .pageNumber(products.getNumber() + 1)
-                .pageSize(products.getSize())
-                .totalPages(products.getTotalPages())
-                .totalElements(products.getTotalElements())
-                .last(products.isLast())
+                .content(clientResponsePage)
+                .pageNumber(clients.getNumber() + 1)
+                .pageSize(clients.getSize())
+                .totalPages(clients.getTotalPages())
+                .totalElements(clients.getTotalElements())
+                .last(clients.isLast())
                 .build();
     }
 
     @Override
     @Transactional
     public ClientResponse createClient(ClientRequest clientRequest) {
-        ClientEntity product = clientMapper.toClientEntity(clientRequest);
+
+        ClientEntity client = clientMapper.toClientEntity(clientRequest);
 
         // Guardar la entidad del cliente en la base de datos
-        ClientEntity savedProduct = clientRepository.save(product);
+        ClientEntity savedClient = clientRepository.save(client);
         // Mapear la entidad del cliente guardado a un DTO de respuesta
-        return clientMapper.toClientDTO(savedProduct);
+        return clientMapper.toClientDTO(savedClient);
     }
 
     @Override
