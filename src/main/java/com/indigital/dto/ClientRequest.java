@@ -26,6 +26,7 @@ public class ClientRequest {
             description = "Apellido del cliente",
             example = "Cangalaya"
     )
+    @NotBlank(message = "El apellido no debe estar en blanco")
     @Size(min = 2, max = 200, message = "El apellido debe tener entre {min} y {max} caracteres.")
     private String lastName;
 
@@ -33,6 +34,7 @@ public class ClientRequest {
             description = "Edad del cliente",
             example = "23"
     )
+    @NotNull(message = "La edad no puede ser nula")
     @Min(value = 0, message = "La edad no puede ser negativa")
     @Max(value = 150, message = "La edad no puede ser mayor a {value}")
     private Integer age;
@@ -43,6 +45,7 @@ public class ClientRequest {
     )
     @JsonFormat(pattern = "yyyy-MM-dd")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @NotNull(message = "La fecha de nacimiento no puede ser nula")
     @Past(message = "La fecha de nacimiento debe ser una fecha pasada")
     private LocalDate birthDate;
 }

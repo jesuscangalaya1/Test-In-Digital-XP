@@ -25,6 +25,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.Optional;
 
 import static com.indigital.util.AppConstants.*;
 
@@ -115,7 +116,8 @@ public class ClientServiceImpl implements ClientService {
     @Override
     @Transactional
     public void deleteClient(Long id) {
-        if (!clientRepository.existsById(id)) {
+        Optional<ClientEntity> client = clientRepository.findByIdAndDeletedFalse(id);
+        if (!client.isPresent()) {
             throw new BusinessException(BAD_REQUEST, HttpStatus.NOT_FOUND, BAD_REQUEST_CLIENT + id);
         }
         // Desactivar (eliminar lógicamente) un cliente por su ID

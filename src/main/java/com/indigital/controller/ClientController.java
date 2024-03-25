@@ -42,6 +42,7 @@ public class ClientController {
     }
 
     @Operation(summary = "Obtener la información de todos los clientes paginados")
+    @ApiResponse(responseCode = "200", description = "Clientes obtenidos exitosamente")
     @GetMapping(value = "/pagination", produces = MediaType.APPLICATION_JSON_VALUE)
     public RestResponse<PageableResponse<ClientResponse>> pageableClients(
             @RequestParam(value = "pageNo", defaultValue = NUMERO_DE_PAGINA_POR_DEFECTO, required = false) int numeroDePagina,
@@ -56,7 +57,8 @@ public class ClientController {
     }
 
 
-    @Operation(summary = "Obtener el KPI de los clientes")
+    @Operation(summary = "Obtener el KPI de los clientes (promedio y desviación estandar entre las edades de los clientes)")
+    @ApiResponse(responseCode = "200", description = "Cliente KPI calculado exitosamente")
     @GetMapping(value = "/kpi", produces = MediaType.APPLICATION_JSON_VALUE)
     public RestResponse<ClientKpiResponse> getClientKpi() {
         return new RestResponse<>("SUCCESS",
@@ -67,6 +69,7 @@ public class ClientController {
 
 
     @Operation(summary = "Eliminar un cliente por su ID")
+    @ApiResponse(responseCode = "200", description = "Cliente eliminado exitosamente")
     @DeleteMapping(value = "/{id}")
     public RestResponse<String> deleteClient(@Positive(message = "el ID solo acepta numeros positivos")
                                              @PathVariable Long id) {
